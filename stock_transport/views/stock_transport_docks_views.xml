@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_transport_dock_view_tree" model="ir.ui.view">
+        <field name="name">stock.transport.dock.tree</field>
+        <field name="model">stock.transport.dock</field>
+        <field name="arch" type="xml">
+            <tree open_form_view="True" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="stock_transport_model_action" model="ir.actions.act_window">
+        <field name="name">Docks</field>
+        <field name="res_model">stock.transport.dock</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
