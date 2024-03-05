@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_stock_transport_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.stock.transport.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='delivery']" position="after">
+                <setting id="stock_transport" help="Transport Management: organize packs in your fleet, or carriers." title="Dispatch Management System">
+                    <field name="module_stock_transport"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -10,7 +10,7 @@
     "application": True,
     "license": "OEEL-1",
     "version": "1.0",
-    "depends": ["base", "stock", "fleet"],
+    "depends": ["base", "stock", "fleet", "stock_picking_batch"],
     "data": [
         "security/ir.model.access.csv",
 
