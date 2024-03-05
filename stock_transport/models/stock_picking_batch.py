@@ -11,7 +11,7 @@ class StockPickingBatch(models.Model):
     weight = fields.Float(string="Weight(kg)", compute="_compute_weight_volume")
     volume = fields.Float(string="Volume", compute="_compute_weight_volume")
 
-    @api.depends("vehicle_category_id")
+    @api.depends("vehicle_category_id", "vehicle_category_id.max_weight", "vehicle_category_id.max_volume")
     def _compute_weight_volume(self):
         self.ensure_one()
 
