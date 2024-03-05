@@ -18,24 +18,8 @@ class StockPickingBatch(models.Model):
 
     @api.depends("vehicle_category_id", "vehicle_category_id.max_weight", "vehicle_category_id.max_volume")
     def _compute_weight_volume(self):
-        for record in self:
-            move_line_ids = []
-
-            weight = 0
-            volume = 0
-
-            for move_line_id in record.move_line_ids:
-                move_line_ids.append(move_line_id.id)
-
-            move_lines = self.env["stock.move.line"].browse(move_line_ids)
-
-            for move_line in move_lines:
-                weight += move_line.product_id.weight * move_line.quantity
-                volume += move_line.product_id.volume * move_line.quantity
-            
-            
-            record.weight = weight / record.vehicle_category_id.max_weight if record.vehicle_category_id.max_weight != 0 else 0
-            record.volume = volume / record.vehicle_category_id.max_volume if record.vehicle_category_id.max_volume != 0 else 0
+        self.weight = (sum(self.picking_ids.mapped("weight")) / self.vehicle_category_id.max_weight) * 100 if self.vehicle_category_id.max_weight != 0 else 0
+        self.volume = (sum(self.picking_ids.mapped("volume")) / self.vehicle_category_id.max_volume) * 100 if self.vehicle_category_id.max_volume != 0 else 0
 
     @api.depends("create_date", "scheduled_date")
     def _compute_dates(self):
@@ -47,10 +31,8 @@ class StockPickingBatch(models.Model):
             record.start_date = start_date
             record.end_date = end_date
 
-    @api.depends("move_line_ids")
+    @api.depends("move_line_ids", "picking_ids")
     def _compute_moves_number(self):
-        self.moves_number = len(self.move_line_ids)
-
-    @api.depends("picking_ids")
-    def _compute_transfers_number(self):
-        self.transfers_number = len(self.picking_ids)
+        for record in self:
+            record.moves_number = len(record.move_line_ids)
+            record.transfers_number = len(record.picking_ids)

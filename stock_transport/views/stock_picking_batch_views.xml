@@ -19,7 +19,7 @@
             <xpath expr="//form/sheet/group/group/field[@name='scheduled_date']" position="after">
                 <field name="dock_id"/>
                 <field name="vehicle"/>
-                <field name="vehicle_category_id"/>
+                <field name="vehicle_category_id" placeholder="e.g. Semi-Truck"/>
                 <field name="weight" invisible="not vehicle_category_id" widget="progressbar"/>
                 <field name="volume" invisible="not vehicle_category_id" widget="progressbar"/>
             </xpath>
@@ -54,7 +54,6 @@
                 decoration-success="state == 'in_progress'"
             >
                 <field name="state"/>
-                <field name="vehicle_category_id"/>
             </gantt>
         </field>
     </record>
