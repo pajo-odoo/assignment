@@ -15,11 +15,22 @@ class StockPickingBatch(models.Model):
     end_date = fields.Date(string="End Date", compute="_compute_dates", store=True)
     moves_number = fields.Integer(string="Move Lines", compute="_compute_moves_number", store=True)
     transfers_number = fields.Integer(string="Transfer Lines", compute="_compute_transfers_number", store=True)
+    formatted_weight = fields.Char(string="", compute="_compute_formatted_weight_volume", store=True)
+    formatted_volume = fields.Char(string="", compute="_compute_formatted_weight_volume", store=True)
 
     @api.depends("vehicle_category_id", "vehicle_category_id.max_weight", "vehicle_category_id.max_volume")
     def _compute_weight_volume(self):
         self.weight = (sum(self.picking_ids.mapped("weight")) / self.vehicle_category_id.max_weight) * 100 if self.vehicle_category_id.max_weight != 0 else 0
         self.volume = (sum(self.picking_ids.mapped("volume")) / self.vehicle_category_id.max_volume) * 100 if self.vehicle_category_id.max_volume != 0 else 0
+
+
+    @api.depends("vehicle_category_id", "vehicle_category_id.max_weight", "vehicle_category_id.max_volume")
+    def _compute_formatted_weight_volume(self):
+        for record in self:
+            weight = sum(record.picking_ids.mapped("weight")) or 0
+            volume = sum(record.picking_ids.mapped("volume")) or 0
+            record.formatted_weight = "{} kg".format(weight)
+            record.formatted_volume = "{} m\u00b3".format(volume)
 
     @api.depends("create_date", "scheduled_date")
     def _compute_dates(self):

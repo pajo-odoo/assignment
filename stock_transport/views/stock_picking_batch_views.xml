@@ -20,8 +20,17 @@
                 <field name="dock_id"/>
                 <field name="vehicle"/>
                 <field name="vehicle_category_id" placeholder="e.g. Semi-Truck"/>
-                <field name="weight" invisible="not vehicle_category_id" widget="progressbar"/>
-                <field name="volume" invisible="not vehicle_category_id" widget="progressbar"/>
+                <label for="weight" string="Weight"/>
+                <div>
+                    <field name="formatted_weight" invisible="not vehicle_category_id" class="inline-block w-25" />
+                    <field class="inline-block w-50"  name="weight" widget="progressbar" invisible="not vehicle_category_id" nolabel="1"/>
+                </div>
+
+                <label for="volume" string="Volume"/>
+                <div>
+                    <field name="formatted_volume" invisible="not vehicle_category_id" class="inline-block w-25"/>
+                    <field class="inline-block w-50"  name="volume" widget="progressbar" invisible="not vehicle_category_id" nolabel="1"/>
+                </div>
             </xpath>
         </field>
     </record>
@@ -31,7 +40,7 @@
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <graph string="Batch Transfer">
-                <field name="scheduled_date"/>
+                <field name="scheduled_date" interval="day"/>
                 <field name="vehicle_category_id"/>
                 <field name="weight"/>
                 <field name="volume"/>
@@ -52,21 +61,28 @@
                 default_group_by="dock_id,vehicle" 
                 decoration-info="state == 'draft'"
                 decoration-success="state == 'in_progress'"
+                color="vehicle"
             >
                 <field name="state"/>
             </gantt>
         </field>
     </record>
 
+    <record id="stock_picking_batch_tree" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="sequence" eval="1"/>
+        <field name="act_window_id" ref="stock_picking_batch.stock_picking_batch_action"/>
+    </record>
+
     <record id="stock_picking_batch" model="ir.actions.act_window.view">
         <field name="view_mode">graph</field>
-        <field name="view_id" ref="stock_transport.stock_picking_batch_graph"/>
+        <field name="sequence" eval="2"/>
         <field name="act_window_id" ref="stock_picking_batch.stock_picking_batch_action"/>
     </record>
 
     <record id="stock_picking_batch_gantt_action" model="ir.actions.act_window.view">
         <field name="view_mode">gantt</field>
-        <field name="view_id" ref="stock_transport.stock_picking_batch_view_gantt"/>
+        <field name="sequence" eval="3"/>
         <field name="act_window_id" ref="stock_picking_batch.stock_picking_batch_action"/>
     </record>
 </odoo>
